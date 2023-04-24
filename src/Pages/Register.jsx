@@ -1,7 +1,13 @@
 import React from "react";
 import Layout from "../Components/Layout";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
+
+  const register = () => {
+    navigate("/login");
+  };
   return (
     <>
       {/* <!-- Start Banner Area --> */}
@@ -33,9 +39,9 @@ const Register = () => {
                 <div className="hover">
                   <h4>¿Ya eres usuario?</h4>
 
-                  <a className="primary-btn" href="registration.html">
+                  <Link className="primary-btn" to="login">
                     Iniciar sesion
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -110,6 +116,7 @@ const Register = () => {
                       type="submit"
                       value="submit"
                       className="primary-btn"
+                      onClick={register}
                     >
                       Registrarse{" "}
                     </button>

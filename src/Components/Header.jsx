@@ -1,7 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import useStore from "../state/useStore";
+import { shallow } from "zustand/shallow";
 const Header = () => {
+  const { user, jwt } = useStore(
+    (state) => ({ user: state.user, jwt: state.jwt }),
+    shallow
+  );
+
+  useEffect(() => {
+    if (!jwt) {
+    }
+  }, []);
+
   return (
     <header className="header_area sticky-header">
       <div className="main_menu">
@@ -38,9 +49,9 @@ const Header = () => {
                   </a> */}
                 </li>
                 <li className="nav-item submenu dropdown">
-                  <a
+                  <Link
                     // rome-ignore lint/a11y/useValidAnchor: <explanation>
-                    href="#"
+                    to={"category"}
                     className="nav-link dropdown-toggle"
                     data-toggle="dropdown"
                     role="button"
@@ -48,32 +59,56 @@ const Header = () => {
                     aria-expanded="false"
                   >
                     Tienda
-                  </a>
+                  </Link>
                   <ul className="dropdown-menu">
                     <li className="nav-item">
-                      <a className="nav-link" href="category.html">
+                      <Link className="nav-link" to={"category"}>
                         Categorias
-                      </a>
+                      </Link>
                     </li>
                   </ul>
                 </li>
-                <li className="nav-item">
-                  <Link to={"login"} className="nav-link">
-                    Iniciar Sesion
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link to={"register"} className="nav-link">
-                    Registrarse
-                  </Link>
-                </li>
+                {!jwt ? (
+                  <>
+                    <li className="nav-item">
+                      <Link to={"login"} className="nav-link">
+                        Iniciar Sesion
+                      </Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link to={"register"} className="nav-link">
+                        Registrarse
+                      </Link>
+                    </li>
+                  </>
+                ) : (
+                  <li className="nav-item">
+                    <a
+                      href="#"
+                      className="nav-link"
+                      data-toggle="dropdown"
+                      role="button"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      Bienvenido Usuario
+                    </a>
+                  </li>
+                )}
               </ul>
               <ul className="nav navbar-nav navbar-right">
                 <li className="nav-item">
                   {/* rome-ignore lint/a11y/useValidAnchor: <explanation> */}
-                  <a href="#" className="cart">
+                  <Link to={"cart"} className="cart">
                     <span className="ti-bag" />
-                  </a>
+                  </Link>
+                  <ul className="dropdown-menu">
+                    <li className="nav-item">
+                      <a className="nav-link" href="#">
+                        Cerrar Sesion
+                      </a>
+                    </li>
+                  </ul>
                 </li>
                 <li className="nav-item">
                   <button className="search">

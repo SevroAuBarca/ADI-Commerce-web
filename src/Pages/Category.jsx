@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 const Category = () => {
   return (
     <>
@@ -22,6 +22,12 @@ const Category = () => {
                 <a href="category.html">Fashon Category</a>
               </nav>
             </div>
+          </div>
+          <div className="add-bag d-flex align-items-center">
+            <Link className="add-btn" to="/createProduct">
+              <span className="lnr lnr-cross" />
+            </Link>
+            <span className="add-text text-uppercase">Añadir Producto</span>
           </div>
         </div>
       </section>

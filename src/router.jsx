@@ -7,6 +7,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import ShoppingCard from "./Pages/ShoppingCard";
 import Description from "./Pages/Description";
+import CreateProduct from "./Pages/CreateProduct";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { path: "checkout", element: <Checkout /> },
       { path: "category", element: <Category /> },
       { path: "description", element: <Description /> },
+      { path: "createProduct", element: <CreateProduct /> },
     ],
   },
 ]);

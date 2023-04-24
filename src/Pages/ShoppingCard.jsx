@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const ShoppingCard = () => {
   return (
@@ -9,11 +10,11 @@ const ShoppingCard = () => {
             <div class="col-first">
               <h1>Shopping Cart</h1>
               <nav class="d-flex align-items-center">
-                <a href="index.html">
+                <Link to="/">
                   Home
                   <span class="lnr lnr-arrow-right" />
-                </a>
-                <a href="category.html">Cart</a>
+                </Link>
+                <Link to="category">Cart</Link>
               </nav>
             </div>
           </div>
@@ -170,26 +171,7 @@ const ShoppingCard = () => {
                       <h5>$720.00</h5>
                     </td>
                   </tr>
-                  {/* <tr class="bottom_button">
-                    <td>
-                      <a class="gray_btn" href="#">
-                        Update Cart
-                      </a>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                      <div class="cupon_text d-flex align-items-center">
-                        <input type="text" placeholder="Coupon Code" />
-                        <a class="primary-btn" href="#">
-                          Apply
-                        </a>
-                        <a class="gray_btn" href="#">
-                          Close Coupon
-                        </a>
-                      </div>
-                    </td>
-                  </tr> */}
+
                   <tr>
                     <td></td>
                     <td></td>
@@ -249,13 +231,13 @@ const ShoppingCard = () => {
                     <td></td>
                     <td>
                       <div class="checkout_btn_inner d-flex align-items-center">
-                        <a class="gray_btn" href="#">
+                        <Link class="gray_btn" to="/category">
                           Continuar Comprando
-                        </a>
+                        </Link>
                         {/* rome-ignore lint/a11y/useValidAnchor: <explanation> */}
-                        <a class="primary-btn" href="#">
+                        <Link class="primary-btn" to="/checkout">
                           Proceder al pago
-                        </a>
+                        </Link>
                       </div>
                     </td>
                   </tr>

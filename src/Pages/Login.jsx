@@ -1,6 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import useStore from "../state/useStore";
+import { shallow } from "zustand/shallow";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { setUser, setToken } = useStore(
+    (state) => ({ setUser: state.setUser, setToken: state.setToken }),
+    shallow
+  );
+  const login = () => {
+    setToken("xs");
+    setUser({ nombre: "xx" });
+    navigate("/");
+  };
+
   return (
     <>
       {/* <!-- Start Banner Area --> */}
@@ -80,6 +94,7 @@ const Login = () => {
                       type="submit"
                       value="submit"
                       className="primary-btn"
+                      onClick={login}
                     >
                       Iniciar sesion
                     </button>
