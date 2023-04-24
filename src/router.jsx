@@ -6,6 +6,7 @@ import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import ShoppingCard from "./Pages/ShoppingCard";
+import Description from "./Pages/Description";
 
 const router = createBrowserRouter([
   {
@@ -18,6 +19,7 @@ const router = createBrowserRouter([
       { path: "cart", element: <ShoppingCard /> },
       { path: "checkout", element: <Checkout /> },
       { path: "category", element: <Category /> },
+      { path: "description", element: <Description /> },
     ],
   },
 ]);
