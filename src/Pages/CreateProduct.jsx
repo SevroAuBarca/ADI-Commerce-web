@@ -1,6 +1,42 @@
+import axios from "axios";
+import { useFormik } from "formik";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const CreateProduct = () => {
+  const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      brand: "",
+      category: "",
+      quantity: 0,
+      shortDescription: "",
+      longDescription: "",
+      size: "",
+      colors: [""],
+      price: 0,
+    },
+    onSubmit: async (values) => {
+      const { data } = await axios.post(
+        "http://localhost:3000/products",
+        values
+      );
+      console.log(data);
+      if (data) {
+        Swal.fire("Exxito!", "El  Producto fue creado con exito!", "success");
+        navigate("/");
+      }
+      if (data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message,
+        });
+      }
+    },
+  });
   const addProduct = () => {};
   return (
     <>
@@ -31,7 +67,7 @@ const CreateProduct = () => {
                 <h3>Detalles del Producto</h3>
                 <form
                   class="row contact_form"
-                  action="#"
+                  onSubmit={formik.handleSubmit}
                   method="post"
                   novalidate="novalidate"
                 >
@@ -41,11 +77,10 @@ const CreateProduct = () => {
                         type="text"
                         class="form-control"
                         id="first"
-                        name="Nombre Producto"
-                      />
-                      <span
-                        class="placeholder"
-                        data-placeholder="Nobre Producto"
+                        name="name"
+                        onChange={formik.handleChange}
+                        value={formik.values.name}
+                        placeholder="Nombre Producto"
                       />
                     </div>
                     <div class="col-md-6 form-group p_star">
@@ -53,38 +88,43 @@ const CreateProduct = () => {
                         type="text"
                         class="form-control"
                         id="last"
-                        name="Marca"
+                        name="brand"
+                        onChange={formik.handleChange}
+                        value={formik.values.brand}
+                        placeholder="Marca"
                       />
-                      <span class="placeholder" data-placeholder="Marca" />
                     </div>
                     <div class="col-md-6 form-group p_star">
                       <input
                         type="text"
                         class="form-control"
                         id="number"
-                        name="Categoria"
+                        name="category"
+                        onChange={formik.handleChange}
+                        value={formik.values.category}
+                        placeholder="Categoria"
                       />
-                      <span class="placeholder" data-placeholder="Categoria" />
                     </div>
                     <div class="col-md-6 form-group p_star">
                       <input
                         type="text"
                         class="form-control"
                         id="email"
-                        name="Cantidad"
+                        name="quantity"
+                        onChange={formik.handleChange}
+                        value={formik.values.quantity}
+                        placeholder="Cantidad"
                       />
-                      <span class="placeholder" data-placeholder="Cantidad" />
                     </div>
                     <div class="col-md-6 form-group p_star">
                       <input
                         type="text"
                         class="form-control"
                         id="add1"
-                        name="Descripcion Corta"
-                      />
-                      <span
-                        class="placeholder"
-                        data-placeholder="Descripcion Corta"
+                        name="shortDescription"
+                        onChange={formik.handleChange}
+                        value={formik.values.shortDescription}
+                        placeholder="Descripcion Corta"
                       />
                     </div>
                     <div class="col-md-6 form-group p_star">
@@ -92,17 +132,21 @@ const CreateProduct = () => {
                         type="text"
                         class="form-control"
                         id="city"
-                        name="tamaño"
+                        name="size"
+                        onChange={formik.handleChange}
+                        value={formik.values.size}
+                        placeholder="Tamaño"
                       />
-                      <span class="placeholder" data-placeholder="Tamaño" />
                     </div>
                     <div class="col-md-6 form-group">
                       <input
                         type="text"
                         class="form-control"
                         id="zip"
-                        name="Color"
+                        name="colors"
                         placeholder="Color"
+                        onChange={formik.handleChange}
+                        value={formik.values.colors[0]}
                       />
                     </div>
                     <div class="col-md-6 form-group">
@@ -110,17 +154,21 @@ const CreateProduct = () => {
                         type="text"
                         class="form-control"
                         id="zip"
-                        name="Color"
+                        name="price"
                         placeholder="Precio"
+                        onChange={formik.handleChange}
+                        value={formik.values.price}
                       />
                     </div>
                     <div class="col-md-6 form-group">
                       <textarea
                         class="form-control"
-                        name="message"
+                        name="longDescription"
                         id="message"
                         rows="1"
                         placeholder="Descripcion Larga"
+                        onChange={formik.handleChange}
+                        value={formik.values.longDescription}
                       />
                     </div>
                   </div>
@@ -128,7 +176,6 @@ const CreateProduct = () => {
                     type="submit"
                     value="submit"
                     className="col-md-4 primary-btn"
-                    onClick={addProduct}
                   >
                     Añadir{" "}
                   </button>

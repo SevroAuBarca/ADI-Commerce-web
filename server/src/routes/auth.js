@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import User from "./models/user.js";
+import User from "../models/User.js";
 
 const secretKey = "yourSecretKey";
 const authRouter = express.Router();
@@ -13,7 +13,7 @@ authRouter.post("/register", async (req, res) => {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      res.status(409).json({ message: "User already exists" });
+      res.json({ message: "El Usuario ya existe" });
       return;
     }
 
@@ -31,7 +31,7 @@ authRouter.post("/register", async (req, res) => {
     const savedUser = await newUser.save();
 
     // Create and sign the JWT token
-    const token = jwt.sign({ userId: savedUser._id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId: savedUser._id }, secretKey);
 
     res.status(201).json({ token });
   } catch (error) {
@@ -40,15 +40,27 @@ authRouter.post("/register", async (req, res) => {
   }
 });
 
-authRouter.post("/login", (req, res) => {
+authRouter.post("/login", async (req, res) => {
   // Here, you can validate the user's credentials (e.g. username and password)
   // If the credentials are valid, generate a JWT token with the user's information
   const email = req.body.email;
-  const pass = req.bodyy.pass;
+  const pass = req.body.pass;
+
+  const existingUser = await User.findOne({ email });
+  if (!existingUser) {
+    res.json({ message: "El Usuario No existe. Verifica o registrate" });
+    return;
+  }
+  const correctPassword = await bcrypt.compare(pass, existingUser.password);
+  if (!correctPassword) {
+    res.json({ message: "Error, contraseña incorrecta" });
+    return;
+  }
+
   const token = jwt.sign({ email, pass }, secretKey);
 
   // Send the token back to the client
-  res.json({ token });
+  res.json({ token, user: existingUser });
 });
 
 export default authRouter;

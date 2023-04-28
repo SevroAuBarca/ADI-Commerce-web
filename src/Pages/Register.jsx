@@ -1,13 +1,44 @@
 import React from "react";
-import Layout from "../Components/Layout";
 import { Link, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const navigate = useNavigate();
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      user: "",
+      password: "",
+    },
 
-  const register = () => {
-    navigate("/login");
-  };
+    onSubmit: async (values) => {
+      const response = await axios.post("http://localhost:3000/register", {
+        name: values.name,
+        email: values.email,
+        user: values.user,
+        password: values.password,
+      });
+      console.log(response);
+      if (response.data.token) {
+        Swal.fire(
+          "Registro completo!",
+          "El usuario ha sido registrado con exito!",
+          "success"
+        );
+        navigate("/login");
+      }
+      if (response.data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: response.data.message,
+        });
+      }
+    },
+  });
   return (
     <>
       {/* <!-- Start Banner Area --> */}
@@ -49,6 +80,7 @@ const Register = () => {
               <div className="login_form_inner">
                 <h3>Registrarse</h3>
                 <form
+                  onSubmit={formik.handleSubmit}
                   className="row login_form"
                   method="post"
                   id="contactForm"
@@ -61,6 +93,8 @@ const Register = () => {
                       id="name"
                       name="name"
                       placeholder="Nombre"
+                      onChange={formik.handleChange}
+                      value={formik.values.name}
                       onFocus={(e) => (e.target.placeholder = "")}
                       onBlur={(e) => (e.target.placeholder = "Nombre")}
                     />
@@ -70,8 +104,10 @@ const Register = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      name="name"
+                      name="email"
                       placeholder="Email"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
                       onFocus={(e) => (e.target.placeholder = "")}
                       onBlur={(e) => (e.target.placeholder = "Email")}
                     />
@@ -81,8 +117,10 @@ const Register = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      name="name"
+                      name="user"
                       placeholder="Usuario"
+                      onChange={formik.handleChange}
+                      value={formik.values.user}
                       onFocus={(e) => (e.target.placeholder = "")}
                       onBlur={(e) => (e.target.placeholder = "Usuario")}
                     />
@@ -92,23 +130,12 @@ const Register = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      name="name"
+                      name="password"
                       placeholder="Contraseña"
+                      onChange={formik.handleChange}
+                      value={formik.values.password}
                       onFocus={(e) => (e.target.placeholder = "")}
                       onBlur={(e) => (e.target.placeholder = "Contraseña")}
-                    />
-                  </div>
-                  <div className="col-md-12 form-group">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      name="name"
-                      placeholder="Confirmar contraseña"
-                      onFocus={(e) => (e.target.placeholder = "")}
-                      onBlur={(e) =>
-                        (e.target.placeholder = "Confirmar contraseña")
-                      }
                     />
                   </div>
                   <div className="col-md-12 form-group">
@@ -116,7 +143,6 @@ const Register = () => {
                       type="submit"
                       value="submit"
                       className="primary-btn"
-                      onClick={register}
                     >
                       Registrarse{" "}
                     </button>

@@ -2,6 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useStore from "../state/useStore";
 import { shallow } from "zustand/shallow";
+import { useFormik } from "formik";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -9,11 +12,28 @@ const Login = () => {
     (state) => ({ setUser: state.setUser, setToken: state.setToken }),
     shallow
   );
-  const login = () => {
-    setToken("xs");
-    setUser({ nombre: "xx" });
-    navigate("/");
-  };
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      pass: "",
+    },
+    onSubmit: async (values) => {
+      const { data } = await axios.post("http://localhost:3000/login", values);
+      console.log(data);
+      if (data.token) {
+        setToken(data.token);
+        setUser(data.user);
+        navigate("/");
+      }
+      if (data.message) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: data.message,
+        });
+      }
+    },
+  });
 
   return (
     <>
@@ -60,16 +80,19 @@ const Login = () => {
                   method="post"
                   id="contactForm"
                   noValidate="novalidate"
+                  onSubmit={formik.handleSubmit}
                 >
                   <div className="col-md-12 form-group">
                     <input
                       type="text"
                       className="form-control"
                       id="name"
-                      name="name"
-                      placeholder="Usuario"
+                      name="email"
+                      placeholder="Email"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
                       onFocus={(e) => (e.target.placeholder = "")}
-                      onBlur={(e) => (e.target.placeholder = "Usuario")}
+                      onBlur={(e) => (e.target.placeholder = "Email")}
                     />
                   </div>
                   <div className="col-md-12 form-group">
@@ -77,8 +100,10 @@ const Login = () => {
                       type="text"
                       className="form-control"
                       id="name"
-                      name="name"
+                      name="pass"
                       placeholder="Contraseña"
+                      onChange={formik.handleChange}
+                      value={formik.values.pass}
                       onFocus={(e) => (e.target.placeholder = "")}
                       onBlur={(e) => (e.target.placeholder = "Contraseña")}
                     />
@@ -94,7 +119,6 @@ const Login = () => {
                       type="submit"
                       value="submit"
                       className="primary-btn"
-                      onClick={login}
                     >
                       Iniciar sesion
                     </button>

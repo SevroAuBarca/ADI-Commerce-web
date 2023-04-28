@@ -1,6 +1,31 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
+import useStore from "../state/useStore";
+import { shallow } from "zustand/shallow";
 
 const Description = () => {
+  const { id_product, setProduct, product } = useStore(
+    (state) => ({
+      id_product: state.id_product,
+      setProduct: state.setProduct,
+      product: state.product,
+    }),
+    shallow
+  );
+
+  const getUser = async () => {
+    const { data } = await axios.get(
+      `http://localhost:3000/products/${id_product}`
+    );
+    setProduct(data);
+  };
+
+  useEffect(() => {
+    getUser();
+
+    return () => {};
+  }, []);
+
   return (
     <>
       {/* <!-- Start Banner Area --> */}
@@ -30,12 +55,6 @@ const Description = () => {
           <div class="row s_product_inner">
             <div class="col-lg-6">
               <div class="s_Product_carousel">
-                <div class="single-prd-item">
-                  <img class="img-fluid" src="img/category/s-p1.jpg" alt="" />
-                </div>
-                <div class="single-prd-item">
-                  <img class="img-fluid" src="img/category/s-p1.jpg" alt="" />
-                </div>
                 <div class="single-prd-item">
                   <img class="img-fluid" src="img/category/s-p1.jpg" alt="" />
                 </div>

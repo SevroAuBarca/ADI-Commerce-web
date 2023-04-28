@@ -1,5 +1,8 @@
-import React from "react";
-import Layout from "../Components/Layout";
+import axios from "axios";
+import React, { useEffect } from "react";
+import useStore from "../state/useStore";
+import { shallow } from "zustand/shallow";
+import { Link, useNavigate } from "react-router-dom";
 
 const shoes = [
   { pic: "img/product/p1.jpg" },
@@ -12,6 +15,32 @@ const shoes = [
   { pic: "img/product/p8.jpg" },
 ];
 const Home = () => {
+  const navigate = useNavigate();
+  const { products, setProducts, setIdProduct } = useStore(
+    (state) => ({
+      products: state.products,
+      setProducts: state.setProducts,
+      setIdProduct: state.setIdProduct,
+    }),
+    shallow
+  );
+
+  const getProducts = async () => {
+    const { data } = await axios.get("http://localhost:3000/products");
+    setProducts(data);
+  };
+
+  const getIdProduct = (id) => {
+    console.log(id);
+    setIdProduct(id);
+    navigate("description");
+  };
+
+  useEffect(() => {
+    getProducts();
+    return () => {};
+  }, []);
+
   return (
     <>
       <section className="banner-area">
@@ -121,30 +150,36 @@ const Home = () => {
         </div>
         <div className="row">
           {/* <!-- single product --> */}
-          {shoes.map((shoe, index) => (
-            <div key={`shoe ${index}`} className="col-lg-3 col-md-6">
-              <div className="single-product">
-                <img className="img-fluid" src={shoe.pic} alt="" />
-                <div className="product-details">
-                  <h6>addidas New Hammer sole for Sports person</h6>
-                  <div className="price">
-                    <h6>MXN150.00</h6>
-                    <h6 className="l-through">MXN210.00</h6>
-                  </div>
-                  <div className="prd-bottom">
-                    <a href="" className="social-info">
-                      <span className="ti-bag" />
-                      <p className="hover-text">Añadir al Carrito</p>
-                    </a>
-                    <a href="" className="social-info">
-                      <span className="lnr lnr-heart" />
-                      <p className="hover-text">Lista de Deseos</p>
-                    </a>
+          {products &&
+            products.map((shoe, index) => (
+              <div key={`shoe ${index}`} className="col-lg-3 col-md-6">
+                <div className="single-product">
+                  <img className="img-fluid" src={shoe.pic} alt="" />
+                  <div className="product-details">
+                    <button
+                      onClick={() => getIdProduct(shoe._id)}
+                      className="h6"
+                    >
+                      addidas New Hammer sole for Sports person
+                    </button>
+                    <div className="price">
+                      <h6>MXN150.00</h6>
+                      <h6 className="l-through">MXN210.00</h6>
+                    </div>
+                    <div className="prd-bottom">
+                      <a href="" className="social-info">
+                        <span className="ti-bag" />
+                        <p className="hover-text">Añadir al Carrito</p>
+                      </a>
+                      <a href="" className="social-info">
+                        <span className="lnr lnr-heart" />
+                        <p className="hover-text">Lista de Deseos</p>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
       {/*  */}
